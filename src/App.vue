@@ -301,9 +301,9 @@ function findLooseSeparator(value) {
 
 function stringifyCommentValue(value) {
   if (value === null) return 'null'
-  if (typeof value === 'string') return value
+  if (typeof value === 'string') return normalizeText(value)
   if (typeof value === 'number' || typeof value === 'boolean') return String(value)
-  return trimOuterJsonBrackets(JSON.stringify(value, null, 2), 2)
+  return normalizeText(trimOuterJsonBrackets(JSON.stringify(value, null, 2), 2))
 }
 
 function trimOuterJsonBrackets(value, maxDepth = 1) {
@@ -332,6 +332,9 @@ function removeOneJsonWrapper(value) {
 
 function normalizeText(value) {
   return value
+    .replace(/\\r\\n/g, '\n')
+    .replace(/\\n/g, '\n')
+    .replace(/\\r/g, '\n')
     .replace(/\r\n/g, '\n')
     .replace(/\r/g, '\n')
     .split('\n')
